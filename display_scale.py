@@ -2,7 +2,7 @@
 # Note: use system python3, not /usr/bin/env, because whichever python3 is on
 # $PATH may not have dbus, but the system python3 does.
 
-"""Toggle display scaling between 100% and 200%.
+"""Toggle display scaling
 
 Based on https://gist.github.com/strycore/ca11203fd63cafcac76d4b04235d8759
 
@@ -60,8 +60,12 @@ for mode in connected_monitors[0][1]:
 updated_connected_monitors = [[connector, current_mode, {}]]
 
 x, y, _scale, transform, primary, monitors, props = logical_monitors[0]
+# this has to be an integer, unless fractional scaling is enabled (display settings -> tick fractional scaling)
+# if scaling is a non-integer with fractional scaling disabled, this will silently fail
+DEFAULT_SCALE = 1.5
+HIGHER_SCALE = 2.0
 if scale is None:
-    scale = 2.0 if _scale == 1.0 else 1.0
+    scale = HIGHER_SCALE if _scale == DEFAULT_SCALE else DEFAULT_SCALE
 if scale == _scale:
     print("Nothing to change")
     sys.exit(0)
